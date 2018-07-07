@@ -1,5 +1,5 @@
 <template>
-  <v-app class="calendar-component">
+  <v-app class="calendar-component" style="background-color: transparent;">
     <filters></filters>
     <calendar></calendar>
   </v-app>
@@ -29,11 +29,11 @@ export default {
   width: 60%;
   margin: 40px auto;
   font-family: 'Ubuntu', sans-serif;
-
+  padding: 20px;
   .c-heading {
     color: #006ce5;
     font-weight: bold;
-    font-size: 1.4rem;
+    font-size: 1.3rem;
     text-transform: uppercase;
   }
 }
