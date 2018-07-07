@@ -26,8 +26,7 @@ export default {
 <style lang="scss">
 .calendar-component {
   @import url('https://fonts.googleapis.com/css?family=Ubuntu');
-  width: 60%;
-  margin: 40px auto;
+
   font-family: 'Ubuntu', sans-serif;
 
   .c-heading {
