@@ -2,24 +2,25 @@
   <v-app class="calendar-component">
     <div class="wrapper">
       <filters></filters>
-      <calendar></calendar>
+      <c-calendar></c-calendar>
     </div>
   </v-app>
 </template>
 
 <script>
 
-import calendar from './components/calendar'
+import cCalendar from './components/c-calendar'
 import filters from './components/filters'
 
 export default {
   name: 'App',
   components: {
-    calendar,
+    cCalendar,
     filters
   },
   data () {
     return {
+      
     }
   }
 }

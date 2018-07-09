@@ -20,9 +20,13 @@
 <script>
 export default {
   name: "grid",
+  props: ["filteredEvents"],
   data: function() {
-    return {
-      calendar: [
+    return {};
+  },
+  computed: {
+    calendar: function() {
+      var calendar = [
         {
           day: "Пн",
           date: 1,
@@ -58,8 +62,9 @@ export default {
           date: 7,
           events: []
         }
-      ]
-    };
+      ];
+      return calendar
+    }
   }
 };
 </script>

@@ -1,19 +1,19 @@
 <template>
-  <v-expansion-panel v-model="panel" expand>
+  <v-expansion-panel expand>
     <v-expansion-panel-content>
       <div slot="header" class="c-heading">
         <i class="fas fa-filter"></i> Фильтры
       </div>
       <v-container fluid grid-list-md>
         <v-layout wrap align-center>
-          <v-flex v-for="(selector, id) in selectorsSolo" :key="`${selector.label}-${id}`" xs12 sm6>
-            <v-select v-model="value" :items="selector.choices" :label="selector.label">
+          <v-flex v-for="(selector, id) in selectorsSolo" :key="`${selector.label}-${id}`" xs12 sm4>
+            <v-select :items="selector.choices" :label="selector.label">
             </v-select>
           </v-flex>
-          <v-flex v-for="(selector, id) in selectorsMulti" :key="`${selector.label}-${id}`" xs12 sm6>
+          <v-flex v-for="(selector, id) in selectorsMulti" :key="`${selector.label}-${id}`" xs12 sm4>
             <v-select v-model="chips" :items="selector.choices" :label="selector.label" multiple>
               <template slot="selection" slot-scope="data">
-                <v-chip :selected="data.selected" close @input="remove(data.item)">
+                <v-chip small :selected="data.selected" close @input="remove(data.item)">
                   {{data.item}}
                 </v-chip>
               </template>
@@ -30,8 +30,6 @@ export default {
   name: "filters",
   data() {
     return {
-      panel: [],
-      value: [],
       chips: [],
       items: ["Streaming", "Eating"],
       selectorsSolo: [
