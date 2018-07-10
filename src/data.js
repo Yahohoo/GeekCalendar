@@ -1,4 +1,5 @@
-[{
+var scheduale = [
+    {
     "id": 7237,
     "name": "Занятие 20",
     "baseLesson": {
@@ -2815,3 +2816,5 @@
     "direction": "Чанк Lego-A",
     "teachersName": ["Малика Бахтиарова"]
 }]
+
+export default scheduale

@@ -1,7 +1,7 @@
 <template>
   <v-app class="calendar-component">
     <div class="wrapper">
-      <filters></filters>
+      <c-filters></c-filters>
       <c-calendar></c-calendar>
     </div>
   </v-app>
@@ -10,18 +10,55 @@
 <script>
 
 import cCalendar from './components/c-calendar'
-import filters from './components/filters'
+import cFilters from './components/c-filters'
+import scheduale from './data.js'
+
+function filterEqual(lesson) {
+  var fields = this.event.dataFields
+  if (fields) {
+    var field = lesson
+    for (const fieldName of fields) {
+      field = lesson[fieldName]
+    }
+  }
+  console.log(field)
+}
 
 export default {
   name: 'App',
   components: {
     cCalendar,
-    filters
+    cFilters
   },
   data () {
     return {
-      
+      scheduale: scheduale,
+      filteredScheduale: []
     }
+  },
+  computed: {
+
+  },
+  methods: {
+    filterScheduale(event, data) {
+      var filFunc = null
+      switch (event.eventType) {
+        case 'filter-equal':
+          filFunc = filterEqual
+        case 'filter-age':
+        case 'filter-class':
+        case 'filter-in':
+      }
+
+      this.filteredScheduale = this.scheduale.filter(
+        filFunc, {event, data}
+      )
+      
+
+    }
+  },
+  created() {
+    this.$root.$on('filter-change', this.filterScheduale)
   }
 }
 
