@@ -28,21 +28,16 @@ export default {
       // Данные для фильтра включают тип ивента для обновления фильтра
       selectors: [
         {
-          label: "Филиал",
-          choices: ["Геккон-основной", "Ещё какой-то"],
-          multi: false,
-          event: {
-            eventType: "filter-equal",
-            dataFiels: null
-          }
-        },
-        {
           label: "Возраст",
           choices: [3, 4, 5, 6, 7],
           multi: true,
           event: {
-            eventType: "filter-age",
-            dataFiels: null
+            id: "age",
+            eventType: "filter-between",
+            dataFields: [
+              ['baseLesson', 'min_age'],
+              ['baseLesson', 'max_age']
+            ]
           }
         },
         {
@@ -50,17 +45,42 @@ export default {
           choices: [1, 3, 4, 5, 6, 7, 8, 9, 10, 11],
           multi: true,
           event: {
-            eventType: "filter-class",
-            dataFiels: null
+            id: "class",
+            eventType: "filter-between",
+            dataFields: [
+              ['baseLesson', 'min_class'],
+              ['baseLesson', 'max_class']
+            ]
           }
         },
-        {
+                {
+          label: "Статус",
+          choices: ["Робо-1", "Шахматно-мат класс"],
+          multi: false,
+          event: {
+            id: "status",
+            eventType: "filter-equal",
+            dataFields: ["room", "name"]
+          }
+        },
+                {
+          label: "Направление",
+          choices: ["Робо-1", "Шахматно-мат класс"],
+          multi: false,
+          event: {
+            id: "dir",
+            eventType: "filter-equal",
+            dataFields: ["room", "name"]
+          }
+        },
+                {
           label: "Педагог",
           choices: ["Алексей Ильин", "Лев Юманов"],
           multi: false,
           event: {
+            id: "teacher",
             eventType: "filter-in",
-            dataFiels: ["teachersName"]
+            dataFields: ["teachersName"]
           }
         },
         {
@@ -68,13 +88,51 @@ export default {
           choices: ["Робо-1", "Шахматно-мат класс"],
           multi: false,
           event: {
+            id: "room",
             eventType: "filter-equal",
-            dataFiels: ["room", "name"]
+            dataFields: ["room", "name"]
           }
-        }
+        },
+                {
+          label: "День недели",
+          choices: [
+            "Пн",
+            "Вт",
+            "Ср",
+            "Чт",
+            "Пт",
+            "Сб",
+            "Вс"
+          ],
+          multi: true,
+          event: {
+            id: "day",
+            eventType: "filter-equal",
+            dataFields: ["startDate"],
+            process: function (date) {
+              date = new Date(date)
+
+              const daysOfWeek = {
+                1: "Пн",
+                2: "Вт",
+                3: "Ср",
+                4: "Чт",
+                5: "Пт",
+                6: "Сб",
+                0: "Вс"
+              }
+
+              const day = date.getDay()
+              return daysOfWeek[day]
+            }
+          }
+        },
       ]
     };
   },
+  methods: {
+    
+  }
 };
 </script>
 

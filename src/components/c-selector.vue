@@ -1,6 +1,6 @@
 <template>
     <v-flex xs12 sm4>
-        <v-select @change="filterChange(prs.event, $event)" v-model="chips" :items="prs.choices" :label="prs.label" :multiple="prs.multi">
+        <v-select clearable @change="filterChange(prs.event, $event)" v-model="chips" :items="prs.choices" :label="prs.label" :multiple="prs.multi">
             <template slot="selection" slot-scope="data">
                 <v-chip v-if="prs.multi" small :selected="data.selected" close @input="remove(data.item)">
                     {{data.item}}

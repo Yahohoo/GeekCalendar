@@ -1,4 +1,4 @@
-var scheduale = [
+var schedule = [
     {
     "id": 7237,
     "name": "Занятие 20",
@@ -2817,4 +2817,4 @@ var scheduale = [
     "teachersName": ["Малика Бахтиарова"]
 }]
 
-export default scheduale
+export default schedule
