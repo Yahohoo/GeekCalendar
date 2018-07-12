@@ -1,5 +1,13 @@
 <template>
   <v-card class="calendar">
+    <v-layout>
+      <v-flex>
+
+      </v-flex>
+      <v-flex>
+
+      </v-flex>
+    </v-layout>
       <div class="header">
         <div class="c-heading"><i class="fas fa-calendar-alt"></i> Календарь</div>
         <div class="menu">
@@ -11,14 +19,12 @@
           
         </div>
       </div>
-      <div class="events-grid">
-        <grid></grid>
-      </div>
+      <c-events-grid></c-events-grid>
   </v-card>
 </template>
 
 <script>
-import grid from './grid'
+import cEventsGrid from './c-events-grid'
 
 export default {
   name: 'calendar',
@@ -26,7 +32,7 @@ export default {
       msg: String
   },
   components: {
-    grid
+    cEventsGrid
   },
   data: function () {
     return {

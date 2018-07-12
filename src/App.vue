@@ -4,7 +4,6 @@
       <c-filters></c-filters>
       <c-calendar></c-calendar>
     {{filteredSchedule.length}}
-
     </div>
   </v-app>
 </template>

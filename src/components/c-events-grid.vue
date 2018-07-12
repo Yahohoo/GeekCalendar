@@ -1,7 +1,7 @@
 <template>
-    <v-container fluid>
-        <v-layout>
-            <v-flex v-for="day in calendar" :key="`row-date-${day.date}`">
+    <v-container fluid class="calendar">
+        <v-layout class="calendar-layout">
+            <v-flex class="calendar-column" v-for="day in calendar" :key="`row-date-${day.date}`">
                 <div class="head">
                     <div class="day">
                         {{day.day}}
@@ -11,6 +11,7 @@
                     </div>
                 </div>
                 <div class="events">
+
                 </div>
             </v-flex>
         </v-layout>
@@ -19,7 +20,7 @@
 
 <script>
 export default {
-  name: "grid",
+  name: "c-events-grid",
   props: ["filteredEvents"],
   data: function() {
     return {};
@@ -65,9 +66,22 @@ export default {
       ];
       return calendar
     }
-  }
+  },
 };
 </script>
 
-<style>
+<style lang="scss" scoped>
+.calendar /deep/ .calendar-column {
+  border: 1px solid #e0e0e0;
+  border-right: none;
+}
+
+.calendar /deep/ .calendar-column:last-child {
+  border-right: 1px solid #e0e0e0;
+}
+
+.calendar /deep/ .head {
+  border-bottom: 1px solid #e0e0e0;
+}
 </style>
+

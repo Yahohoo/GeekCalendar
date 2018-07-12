@@ -4,7 +4,7 @@
       <div slot="header" class="c-heading">
         <i class="fas fa-filter"></i> Фильтры
       </div>
-      <v-container fluid grid-list-md >
+      <v-container fluid grid-list-md class="filters-container">
         <v-layout wrap align-center>
           <c-selector v-for="(selector, id) in selectors" :key="`${selector.label}-${id}`" :prs="selector"></c-selector>
         </v-layout>
@@ -15,6 +15,7 @@
 
 <script>
 import cSelector from "./c-selector";
+import func from "../lib/func.js"
 
 export default {
   name: "filters",
@@ -109,22 +110,7 @@ export default {
             id: "day",
             eventType: "filter-equal",
             dataFields: ["startDate"],
-            process: function (date) {
-              date = new Date(date)
-
-              const daysOfWeek = {
-                1: "Пн",
-                2: "Вт",
-                3: "Ср",
-                4: "Чт",
-                5: "Пт",
-                6: "Сб",
-                0: "Вс"
-              }
-
-              const day = date.getDay()
-              return daysOfWeek[day]
-            }
+            process: func.dayFromDate
           }
         },
       ]
@@ -138,4 +124,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+  .filters-container {
+    padding-top: 0;
+  }
 </style>
