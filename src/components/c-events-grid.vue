@@ -1,9 +1,24 @@
 <template>
-    <v-container fluid class="calendar">
+<div class="calendar">
+  <div class="header">
+    <div class="col-head">
+      <div class="day" v-for="day in calendar" :key="`col-head-${day.date}`">
+        <div class="day-name">{{day.day}}</div>
+        <div class="is-curr" v-if="today == day.date"></div>
+      </div>
+      <div class="date"></div>
+    </div>
+  </div>
+  <div class="events">
+    <div class="column"></div>
+  </div>
+</div>
+<!--     <v-container fluid class="calendar">
         <v-layout class="calendar-layout">
             <v-flex class="calendar-column" v-for="day in calendar" :key="`row-date-${day.date}`">
                 <div class="head">
                     <div class="day">
+                      <div class="day-name"></div>
                         {{day.day}}
                     </div>
                     <div class="date">
@@ -15,58 +30,77 @@
                 </div>
             </v-flex>
         </v-layout>
-    </v-container>
+    </v-container> -->
 </template>
 
 <script>
+import func from "../lib/func.js";
+
 export default {
   name: "c-events-grid",
-  props: ["filteredEvents"],
+  props: ["schedule"],
   data: function() {
-    return {};
+    return {
+      today: null
+    };
   },
   computed: {
-    calendar: function() {
+    datesForWeek() {
+      return null
+    },
+    weekSchedule() {
+      var events = {
+        "Пн": [],
+        "Вт": [],
+        "Ср": [],
+        "Чт": [],
+        "Пт": [],
+        "Сб": [],
+        "Вс": [],
+      }
+      for (let event of this.schedule) {
+        const day = func.dayFromDate(event.startDate)
+        events[day].push(event)
+      }
+      return events
+    },
+    calendar() {
+      // dynamic date
       var calendar = [
         {
           day: "Пн",
-          date: 1,
-          events: []
+          events: this.weekSchedule["Пн"]
         },
         {
           day: "Вт",
-          date: 2,
-          events: []
+          events: this.weekSchedule["Вт"]
         },
         {
           day: "Ср",
-          date: 3,
-          events: []
+          events: this.weekSchedule["Ср"]
         },
         {
           day: "Чт",
-          date: 4,
-          events: []
+          events: this.weekSchedule["Чт"]
         },
         {
           day: "Пт",
-          date: 5,
-          events: []
+          events: this.weekSchedule["Пт"]
         },
         {
           day: "Сб",
-          date: 6,
-          events: []
+          events: this.weekSchedule["Сб"]
         },
         {
           day: "Вс",
-          date: 7,
-          events: []
+          events: this.weekSchedule["Вс"]
         }
       ];
       return calendar
     }
   },
+  created() {
+  }
 };
 </script>
 
