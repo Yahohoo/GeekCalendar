@@ -2,7 +2,7 @@
   <v-app class="calendar-component">
     <div class="wrapper">
       <c-filters></c-filters>
-      <c-calendar></c-calendar>
+      <c-calendar :schedule="filteredSchedule"></c-calendar>
     {{filteredSchedule.length}}
     </div>
   </v-app>

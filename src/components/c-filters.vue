@@ -15,7 +15,7 @@
 
 <script>
 import cSelector from "./c-selector";
-import func from "../lib/func.js"
+import func from "../lib/func.js";
 
 export default {
   name: "filters",
