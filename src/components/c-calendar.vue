@@ -50,7 +50,7 @@ export default {
   },
   data: function() {
     return {
-      currentWeekDay: moment().toArray(),
+      currentWeekDay: moment().toArray()
     };
   },
   created() {
@@ -58,17 +58,14 @@ export default {
   },
   methods: {
     switchWeek(dir) {
-      var current = moment(this.currentWeekDay)
-      dir == 'next'
-        ? current.add(7, 'd')
-        : current.subtract(7, 'd')
-      this.currentWeekDay = current.toArray()
+      var current = moment(this.currentWeekDay);
+      dir == "next" ? current.add(7, "d") : current.subtract(7, "d");
+      this.currentWeekDay = current.toArray();
     }
   },
   computed: {
     weekInfo() {
-
-      var curr = moment(this.currentWeekDay)
+      var curr = moment(this.currentWeekDay);
       var dates = [];
       var startMonth, endMonth, startYear, endYear;
 
@@ -94,8 +91,7 @@ export default {
       };
     }
   },
-  created() {
-  }
+  created() {}
 };
 </script>
 
@@ -107,8 +103,8 @@ export default {
   .header {
     display: flex;
     .current-period span {
-      text-transform: capitalize
-    } 
+      text-transform: capitalize;
+    }
   }
   .date-switcher {
     display: flex;

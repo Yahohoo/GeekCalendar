@@ -46,23 +46,23 @@ export default {
   },
   computed: {
     datesForWeek() {
-      return null
+      return null;
     },
     weekSchedule() {
       var events = {
-        "Пн": [],
-        "Вт": [],
-        "Ср": [],
-        "Чт": [],
-        "Пт": [],
-        "Сб": [],
-        "Вс": [],
-      }
+        Пн: [],
+        Вт: [],
+        Ср: [],
+        Чт: [],
+        Пт: [],
+        Сб: [],
+        Вс: []
+      };
       for (let event of this.schedule) {
-        const day = func.dayFromDate(event.startDate)
-        events[day].push(event)
+        const day = func.dayFromDate(event.startDate);
+        events[day].push(event);
       }
-      return events
+      return events;
     },
     calendar() {
       // dynamic date
@@ -96,11 +96,10 @@ export default {
           events: this.weekSchedule["Вс"]
         }
       ];
-      return calendar
+      return calendar;
     }
   },
-  created() {
-  }
+  created() {}
 };
 </script>
 

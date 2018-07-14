@@ -35,10 +35,7 @@ export default {
           event: {
             id: "age",
             eventType: "filter-between",
-            dataFields: [
-              ['baseLesson', 'min_age'],
-              ['baseLesson', 'max_age']
-            ]
+            dataFields: [["baseLesson", "min_age"], ["baseLesson", "max_age"]]
           }
         },
         {
@@ -49,12 +46,12 @@ export default {
             id: "class",
             eventType: "filter-between",
             dataFields: [
-              ['baseLesson', 'min_class'],
-              ['baseLesson', 'max_class']
+              ["baseLesson", "min_class"],
+              ["baseLesson", "max_class"]
             ]
           }
         },
-                {
+        {
           label: "Статус",
           choices: ["Робо-1", "Шахматно-мат класс"],
           multi: false,
@@ -64,7 +61,7 @@ export default {
             dataFields: ["room", "name"]
           }
         },
-                {
+        {
           label: "Направление",
           choices: ["Робо-1", "Шахматно-мат класс"],
           multi: false,
@@ -74,7 +71,7 @@ export default {
             dataFields: ["room", "name"]
           }
         },
-                {
+        {
           label: "Педагог",
           choices: ["Алексей Ильин", "Лев Юманов"],
           multi: false,
@@ -94,17 +91,9 @@ export default {
             dataFields: ["room", "name"]
           }
         },
-                {
+        {
           label: "День недели",
-          choices: [
-            "Пн",
-            "Вт",
-            "Ср",
-            "Чт",
-            "Пт",
-            "Сб",
-            "Вс"
-          ],
+          choices: ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"],
           multi: true,
           event: {
             id: "day",
@@ -112,19 +101,17 @@ export default {
             dataFields: ["startDate"],
             process: func.dayFromDate
           }
-        },
+        }
       ]
     };
   },
-  methods: {
-    
-  }
+  methods: {}
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-  .filters-container {
-    padding-top: 0;
-  }
+.filters-container {
+  padding-top: 0;
+}
 </style>

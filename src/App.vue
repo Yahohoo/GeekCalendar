@@ -12,7 +12,7 @@
 import cCalendar from "./components/c-calendar";
 import cFilters from "./components/c-filters";
 import schedule from "./data.js";
-import Vue from 'vue';
+import Vue from "vue";
 
 function getField(lesson, fields, process) {
   if (!fields) {
@@ -64,12 +64,10 @@ export default {
   computed: {
     // второй проход, но реактивность
     filteredSchedule() {
-      var filtered =  this.schedule.filter(
-        lesson => {
-          return Object.values(lesson._filters).every(el => el)
-        } 
-      )
-      return filtered
+      var filtered = this.schedule.filter(lesson => {
+        return Object.values(lesson._filters).every(el => el);
+      });
+      return filtered;
     }
   },
   methods: {
@@ -78,9 +76,8 @@ export default {
 
       if (!Array.isArray(data)) {
         if (data === null) {
-          data = []
-        }
-        else {
+          data = [];
+        } else {
           data = [data];
         }
       }
@@ -106,7 +103,7 @@ export default {
                 fields: event.dataFields,
                 data
               });
-        Vue.set(lesson._filters, event.id, doFit)
+        Vue.set(lesson._filters, event.id, doFit);
       }
     }
   },
@@ -114,7 +111,7 @@ export default {
     this.$root.$on("filter-change", this.checkSchedule);
 
     for (var lesson of this.schedule) {
-      Vue.set(lesson, '_filters', {})
+      Vue.set(lesson, "_filters", {});
     }
   }
 };
