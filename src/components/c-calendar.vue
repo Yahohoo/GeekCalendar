@@ -14,7 +14,6 @@
       <div class="menu">
         <div class="date-switcher">
           <v-icon @click="switchWeek('prev')">fas fa-angle-left</v-icon>
-          <v-icon @click="switchWeek('next')">fas fa-angle-right</v-icon>
           <div class="current-period">
             <span>{{weekInfo.startMonth}}</span>
             <span 
@@ -29,11 +28,12 @@
               {{weekInfo.endYear}}
             </span>
           </div>
+          <v-icon @click="switchWeek('next')">fas fa-angle-right</v-icon>
         </div>
 
       </div>
     </div>
-    <c-events-grid :schedule="schedule"></c-events-grid>
+    <c-events-grid :schedule="schedule" :dates="weekInfo.dates"></c-events-grid>
   </v-card>
 </template>
 
@@ -52,9 +52,6 @@ export default {
     return {
       currentWeekDay: moment().toArray()
     };
-  },
-  created() {
-    console.log(this.getWeekInfo);
   },
   methods: {
     switchWeek(dir) {

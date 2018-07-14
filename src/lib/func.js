@@ -3,13 +3,13 @@ export default {
         date = new Date(date)
 
         const daysOfWeek = {
-            1: "Пн",
-            2: "Вт",
-            3: "Ср",
-            4: "Чт",
-            5: "Пт",
-            6: "Сб",
-            0: "Вс"
+            1: "пн",
+            2: "вт",
+            3: "ср",
+            4: "чт",
+            5: "пт",
+            6: "сб",
+            0: "вс"
         }
 
         const day = date.getDay()

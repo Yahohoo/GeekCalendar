@@ -1,5 +1,5 @@
 <template>
-  <v-app class="calendar-component">
+  <v-app class="calendar-app">
     <div class="wrapper">
       <c-filters></c-filters>
       <c-calendar :schedule="filteredSchedule"></c-calendar>
@@ -128,11 +128,12 @@ export default {
 </script>
 
 <style lang="scss">
-.calendar-component {
+.calendar-app {
   @import url("https://fonts.googleapis.com/css?family=Ubuntu");
   font-family: "Ubuntu", sans-serif;
+  color: #212121;
 
-  .wrapper {
+  > .wrapper {
     width: 80%;
     margin: 40px auto;
   }
