@@ -2,7 +2,7 @@
   <v-expansion-panel expand>
     <v-expansion-panel-content>
       <div slot="header" class="c-heading">
-        <i class="fas fa-filter"></i> Фильтры
+        <i class="fas fa-filter"></i> фильтры
       </div>
       <v-container fluid grid-list-md class="filters-container">
         <v-layout wrap align-center>
@@ -22,10 +22,9 @@ export default {
   components: {
     cSelector
   },
+  props: ["eventsData"],
   data() {
     return {
-      chips: [],
-      items: ["Streaming", "Eating"],
       // Данные для фильтра включают тип ивента для обновления фильтра
       selectors: [
         {
@@ -105,7 +104,9 @@ export default {
       ]
     };
   },
-  methods: {}
+  methods: {
+    getFieldValues(path) {}
+  }
 };
 </script>
 

@@ -1,9 +1,8 @@
 <template>
-  <v-app class="calendar-app">
-    <div class="wrapper">
-      <c-filters></c-filters>
+  <v-app>
+    <div class="calendar-app">
+      <c-filters :eventsData="schedule"></c-filters>
       <c-calendar :schedule="filteredSchedule"></c-calendar>
-    {{filteredSchedule.length}}
     </div>
   </v-app>
 </template>
@@ -115,31 +114,19 @@ export default {
     }
   }
 };
-
-// var xhr = new XMLHttpRequest();
-// xhr.open('GET', 'https://test.arruzk.ru/api/calendar?from=09-11-2016', false);
-// xhr.setRequestHeader('Content-Type', 'application/json');
-// xhr.send();
-// if (xhr.status != 200) {
-//   alert( xhr.status + ': ' + xhr.statusText );
-// } else {
-//   var sched = xhr.responseText;
-// }
 </script>
 
 <style lang="scss">
 .calendar-app {
   @import url("https://fonts.googleapis.com/css?family=Ubuntu");
-  font-family: "Ubuntu", sans-serif;
+  @import url('https://fonts.googleapis.com/css?family=Open+Sans');
+  font-family: "Open Sans", sans-serif;
   color: #212121;
-
-  > .wrapper {
-    width: 80%;
-    margin: 40px auto;
-  }
+  width: 95%;
+  margin: 10px auto;
 
   .c-heading {
-    color: #006ce5;
+    color: #32c5d2;
     font-weight: bold;
     font-size: 1.2rem;
     text-transform: uppercase;

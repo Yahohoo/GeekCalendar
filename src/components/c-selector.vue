@@ -12,7 +12,6 @@
 </template>
 
 <script>
-
 export default {
   data() {
     return {
@@ -27,9 +26,8 @@ export default {
       this.chips = [...this.chips];
     },
     filterChange(event, data) {
-      this.$root.$emit('filter-change', event, data)
-    },
-
+      this.$root.$emit("filter-change", event, data);
+    }
   }
 };
 </script>

@@ -10,7 +10,7 @@
     </v-layout>
     <div class="header">
       <div class="c-heading">
-        <i class="fas fa-calendar-alt"></i> Календарь</div>
+        <i class="fas fa-calendar-alt"></i> календарь</div>
       <div class="menu">
         <div class="date-switcher">
           <v-icon @click="switchWeek('prev')">fas fa-angle-left</v-icon>
@@ -33,12 +33,12 @@
 
       </div>
     </div>
-    <c-events-grid :schedule="schedule" :dates="weekInfo.dates"></c-events-grid>
+    <events-grid :schedule="schedule" :dates="weekInfo.dates"></events-grid>
   </v-card>
 </template>
 
 <script>
-import cEventsGrid from "./c-events-grid";
+import eventsGrid from "./events-grid";
 import moment from "moment";
 moment.locale("ru");
 
@@ -46,7 +46,7 @@ export default {
   name: "calendar",
   props: ["schedule"],
   components: {
-    cEventsGrid
+    eventsGrid
   },
   data: function() {
     return {
