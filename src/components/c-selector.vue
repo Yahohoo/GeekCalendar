@@ -1,12 +1,33 @@
 <template>
-    <v-flex xs12 sm4>
-        <v-select clearable @change="filterChange(prs.event, $event)" v-model="chips" :items="prs.choices" :label="prs.label" :multiple="prs.multi">
-            <template slot="selection" slot-scope="data">
-                <v-chip v-if="prs.multi" small :selected="data.selected" close @input="remove(data.item)">
-                    {{data.item}}
-                </v-chip>
-                <div v-else class="v-select__selection v-select__selection--comma">{{data.item}}</div>
-            </template>
+    <v-flex xs12 sm4 xl3 class="selector">
+        <v-select
+        clearable
+        @change="filterChange(prs.event, $event)"
+        v-model="chips"
+        :items="prs.choices"
+        :label="prs.label" 
+        :multiple="prs.multi">
+          <template slot="selection" slot-scope="data">
+              <v-chip v-if="prs.multi"
+              small
+              :selected="data.selected"
+              close
+              @input="remove(data.item)">
+                {{data.item}}
+              </v-chip>
+              <div
+              v-else
+              class="v-select__selection v-select__selection--comma">
+                {{data.item}}
+              </div>
+          </template>
+          <template slot="no-data">
+            <div class="v-list__tile">
+              <div class="v-list__tile__content">
+                <div class="v-list__tile__title" :style="{'color': '#aeaeae'}">Нет данных с таким параметром</div>
+              </div>
+            </div>
+          </template>
         </v-select>
     </v-flex>
 </template>
@@ -31,6 +52,3 @@ export default {
   }
 };
 </script>
-
-<style>
-</style>
