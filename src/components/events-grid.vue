@@ -19,7 +19,6 @@
 </template>
 
 <script>
-import func from "../lib/func.js";
 import moment from "moment";
 import eventCard from "./event-card";
 
@@ -46,7 +45,7 @@ export default {
         вс: []
       };
       for (let event of this.schedule) {
-        const day = func.dayFromDate(event.startDate);
+        const day = moment(event.startDate).format('dd');
         events[day].push(event);
       }
       return events;
@@ -101,7 +100,6 @@ export default {
 .calendar-grid {
   height: 500px;
   overflow-y: scroll;
-  border-radius: 5px;
   .grid {
     display: flex;
     .col {
