@@ -1,17 +1,29 @@
 <template>
   <v-app>
     <div class="calendar-app">
-      <c-filters :eventsData="schedule"></c-filters>
+      <v-expansion-panel expand>
+        <v-expansion-panel-content>
+          <div slot="header" class="c-heading">
+            <i class="fas fa-filter"></i> фильтры
+          </div>
+          <v-container fluid grid-list-md class="filters-container">
+            <v-layout wrap align-center>
+              <c-selector v-for="(selector, id) in selectors" :key="`${selector.label}-${id}`" :prs="selector"></c-selector>
+            </v-layout>
+          </v-container>
+        </v-expansion-panel-content>
+      </v-expansion-panel>
       <c-calendar :schedule="filteredSchedule"></c-calendar>
     </div>
   </v-app>
 </template>
 
 <script>
+import cSelector from "./components/c-selector";
 import cCalendar from "./components/c-calendar";
-import cFilters from "./components/c-filters";
 import schedule from "./data.js";
 import Vue from "vue";
+import selectors from "./selectors.js"
 
 function getField(lesson, fields, process) {
   if (!fields) {
@@ -41,7 +53,7 @@ function filterBetween(lesson, prs) {
   const min = getField(lesson, prs.fields[0]);
 
   if (min === null) {
-    return true;
+    return false;
   }
 
   const max = getField(lesson, prs.fields[1]);
@@ -52,12 +64,13 @@ export default {
   name: "App",
   components: {
     cCalendar,
-    cFilters
+    cSelector
   },
 
   data() {
     return {
-      schedule: schedule
+      schedule: schedule,
+      selectors: selectors.selectors
     };
   },
   computed: {
@@ -108,7 +121,7 @@ export default {
   },
   created() {
     this.$root.$on("filter-change", this.checkSchedule);
-
+    console.log(selectors)
     for (var lesson of this.schedule) {
       Vue.set(lesson, "_filters", {});
     }
