@@ -1,5 +1,4 @@
-var schedule = [
-    {
+var schedule = [{
     "id": 7237,
     "name": "Занятие 20",
     "baseLesson": {
@@ -73,7 +72,7 @@ var schedule = [
         "name": "Математика 2х2",
         "duration": 60,
         "direction_id": 9,
-          "status": 2,
+        "status": 2,
         "type": 0,
         "min_class": 0,
         "max_class": 0,

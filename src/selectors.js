@@ -1,121 +1,136 @@
 import moment from "moment"
 
-const selectors = [
-  {
-    label: "Возраст",
-    choicesFetcher(events) {
-      var min, max, minLocal, maxLocal;
-      min = Infinity;
-      max = -1;
-      for (let event of events) {
-        minLocal = event.baseLesson.min_age;
-        maxLocal = event.baseLesson.max_age;
-        if (min < minLocal) {
-          min = minLocal;
-        }
-        if (max > maxLocal) {
-          max = maxLocal;
-        }
-      }
-      var choices;
-      for (let i = min; i <= max; i++) {
-        choices.push(i);
-      }
-      return choices;
-    },
-    multi: true,
-    event: {
-      id: "age",
-      eventType: "filter-between",
-      dataFields: [
-        ["baseLesson", "min_age"],
-        ["baseLesson", "max_age"]
-      ]
+// Данные для фильтра включают тип ивента для обновления фильтра
+// fetcher - метод сбора данных, в считающем свойстве будет выполняться метод и присваиваться? нет, его буду брать отдельно по id из объекта свойства, которое будет перебирать, можно переписать emit и все остальное, чтобы созранить плоскость
+// предусмотреть краевые случаи!!
+// нужно ли это все вообще?
+
+
+function getValue(event, fields, process = null) {
+  var field = event;
+  for (let fieldName of fields) {
+    field = field[fieldName];
+  }
+  if (process) {
+    field = process(field);
+  }
+  return field;
+}
+
+function rangeFetch(events, fieldsName) {
+  var min, max, minLocal, maxLocal;
+  min = Infinity;
+  max = -1;
+  for (let event of events) {
+    minLocal = getValue(event, fieldsName[0]);
+    maxLocal = getValue(event, fieldsName[1]);
+    if (minLocal !== null && minLocal < min) {
+      min = minLocal;
     }
+    if (maxLocal !== null && maxLocal > max) {
+      max = maxLocal;
+    }
+  }
+  var choices = [];
+  for (let i = min; i <= max; i++) {
+    choices.push(i);
+  }
+  return choices;
+}
+
+function singleFetch(events, fieldsName) {
+  var choices = []
+  var value
+  for (let event of events) {
+    value = getValue(event, fieldsName)
+    if (value !== null && !choices.includes(value)) {
+      choices.push(value)
+    }
+  }
+  return choices
+}
+
+function multiFetch(events, fieldsName) {
+  var choices = []
+  var values
+  for (let event of events) {
+    values = getValue(event, fieldsName)
+    for (let value of values) {
+      if (value !== null && !choices.includes(value)) {
+        choices.push(value)
+      }
+    }
+  }
+  return choices
+}
+
+const selectors = [{
+    label: "Возраст",
+    choicesFetcher: rangeFetch,
+    multi: true,
+    id: "age",
+    filterType: "filter-between",
+    fieldsName: [
+      ["baseLesson", "min_age"],
+      ["baseLesson", "max_age"]
+    ]
   },
   {
     label: "Класс",
-    choicesFetcher(events) {
-      var min, max, minLocal, maxLocal;
-      min = Infinity;
-      max = -1;
-      for (let event of events) {
-        minLocal = event.baseLesson.min_age;
-        maxLocal = event.baseLesson.max_age;
-        if (min < minLocal) {
-          min = minLocal;
-        }
-        if (max > maxLocal) {
-          max = maxLocal;
-        }
-      }
-      var choices;
-      for (let i = min; i <= max; i++) {
-        choices.push(i);
-      }
-      return choices;
-    },
+    choicesFetcher: rangeFetch,
     multi: true,
-    event: {
-      id: "class",
-      eventType: "filter-between",
-      dataFields: [
-        ["baseLesson", "min_class"],
-        ["baseLesson", "max_class"]
-      ]
-    }
+    id: "class",
+    filterType: "filter-between",
+    fieldsName: [
+      ["baseLesson", "min_class"],
+      ["baseLesson", "max_class"]
+    ]
   },
   {
     label: "Статус",
-    choices: ["Робо-1", "Шахматно-мат класс"],
+    choicesFetcher: () => [],
     multi: false,
-    event: {
-      id: "status",
-      eventType: "filter-equal",
-      dataFields: ["room", "name"]
-    }
+    id: "status",
+    filterType: "filter-equal",
+    fieldsName: ["room", "name"]
   },
   {
     label: "Направление",
-    choices: ["Робо-1", "Шахматно-мат класс"],
+    choicesFetcher: singleFetch,
     multi: false,
-    event: {
-      id: "dir",
-      eventType: "filter-equal",
-      dataFields: ["room", "name"]
-    }
+    id: "dir",
+    filterType: "filter-equal",
+    fieldsName: ["direction"]
   },
   {
     label: "Педагог",
-    choices: ["Алексей Ильин", "Лев Юманов"],
+    choicesFetcher: multiFetch,
     multi: false,
-    event: {
-      id: "teacher",
-      eventType: "filter-in",
-      dataFields: ["teachersName"]
-    }
+    id: "teacher",
+    filterType: "filter-in",
+    fieldsName: ["teachersName"]
   },
   {
     label: "Помещение",
-    choices: ["Робо-1", "Шахматно-мат класс"],
+    choicesFetcher: singleFetch,
     multi: false,
-    event: {
-      id: "room",
-      eventType: "filter-equal",
-      dataFields: ["room", "name"]
-    }
+    id: "room",
+    filterType: "filter-equal",
+    fieldsName: ["room", "name"]
+
   },
   {
     label: "День недели",
-    choices: ["пн", "вт", "ср", "чт", "пт", "сб", "вс"],
+    choicesFetcher: () => ["пн", "вт", "ср", "чт", "пт", "сб", "вс"],
     multi: true,
-    event: {
-      id: "day",
-      eventType: "filter-equal",
-      dataFields: ["startDate"],
-      process: (date) => moment(date).format('dd')
-    }
+    id: "day",
+    filterType: "filter-equal",
+    fieldsName: ["startDate"],
+    process: (date) => moment(date).format('dd')
   }
 ]
 
-export default {selectors};
+export {
+  selectors,
+  getValue
+};

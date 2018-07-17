@@ -8,7 +8,11 @@
           </div>
           <v-container fluid grid-list-md class="filters-container">
             <v-layout wrap align-center>
-              <c-selector v-for="(selector, id) in selectors" :key="`${selector.label}-${id}`" :prs="selector"></c-selector>
+              <c-selector
+              v-for="selector in selectors"
+              :key="selector.id"
+              :prs="selector"
+              :choices="selectorsChoices[selector.id]"/>
             </v-layout>
           </v-container>
         </v-expansion-panel-content>
@@ -23,40 +27,26 @@ import cSelector from "./components/c-selector";
 import cCalendar from "./components/c-calendar";
 import schedule from "./data.js";
 import Vue from "vue";
-import selectors from "./selectors.js"
-
-function getField(lesson, fields, process) {
-  if (!fields) {
-    return null;
-  }
-  var field = lesson;
-  for (const fieldName of fields) {
-    field = field[fieldName];
-  }
-  if (process) {
-    field = process(field);
-  }
-  return field;
-}
+import { selectors, getValue } from "./selectors.js";
 
 function filterEqual(lesson, prs) {
-  var field = getField(lesson, prs.fields, prs.process);
+  var field = getValue(lesson, prs.fields, prs.process);
   return prs.data.some(el => field == el);
 }
 
 function filterIn(lesson, prs) {
-  const field = getField(lesson, prs.fields);
+  const field = getValue(lesson, prs.fields);
   return prs.data.some(el => field.includes(el));
 }
 
 function filterBetween(lesson, prs) {
-  const min = getField(lesson, prs.fields[0]);
+  const min = getValue(lesson, prs.fields[0]);
 
   if (min === null) {
     return false;
   }
 
-  const max = getField(lesson, prs.fields[1]);
+  const max = getValue(lesson, prs.fields[1]);
   return prs.data.some(el => min <= el && el <= max);
 }
 
@@ -70,7 +60,7 @@ export default {
   data() {
     return {
       schedule: schedule,
-      selectors: selectors.selectors
+      selectors: selectors
     };
   },
   computed: {
@@ -80,11 +70,22 @@ export default {
         return Object.values(lesson._filters).every(el => el);
       });
       return filtered;
+    },
+    selectorsChoices() {
+      var selectorsChoices = {};
+      var id, fields, choices;
+      for (let selector of this.selectors) {
+        id = selector.id;
+        fields = selector.fieldsName;
+        choices = selector.choicesFetcher(this.schedule, fields);
+        selectorsChoices[id] = choices;
+      }
+      return selectorsChoices;
     }
   },
   methods: {
     checkSchedule(event, data) {
-      var filFunc = null;
+      var filFunc;
 
       if (!Array.isArray(data)) {
         if (data === null) {
@@ -94,7 +95,7 @@ export default {
         }
       }
 
-      switch (event.eventType) {
+      switch (event.filterType) {
         case "filter-equal":
           filFunc = filterEqual;
           break;
@@ -112,7 +113,7 @@ export default {
             ? true
             : filFunc(lesson, {
                 process: event.process,
-                fields: event.dataFields,
+                fields: event.fieldsName,
                 data
               });
         Vue.set(lesson._filters, event.id, doFit);
@@ -121,7 +122,6 @@ export default {
   },
   created() {
     this.$root.$on("filter-change", this.checkSchedule);
-    console.log(selectors)
     for (var lesson of this.schedule) {
       Vue.set(lesson, "_filters", {});
     }
@@ -132,14 +132,14 @@ export default {
 <style lang="scss">
 .calendar-app {
   @import url("https://fonts.googleapis.com/css?family=Ubuntu");
-  @import url('https://fonts.googleapis.com/css?family=Open+Sans');
+  @import url("https://fonts.googleapis.com/css?family=Open+Sans");
   font-family: "Open Sans", sans-serif;
   color: #212121;
   width: 95%;
   margin: 10px auto;
 
   .c-heading {
-    color: #32c5d2;
+    color: #337ab7;
     font-weight: bold;
     font-size: 1.2rem;
     text-transform: uppercase;
