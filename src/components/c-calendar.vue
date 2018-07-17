@@ -1,19 +1,12 @@
 <template>
   <v-card class="calendar">
-    <v-layout>
-      <v-flex>
-
-      </v-flex>
-      <v-flex>
-
-      </v-flex>
-    </v-layout>
     <div class="header">
       <div class="c-heading">
-        <i class="fas fa-calendar-alt"></i> календарь</div>
+        <i class="fas fa-calendar-alt"></i> календарь
+      </div>
       <div class="menu">
         <div class="date-switcher">
-          <v-icon @click="switchWeek('prev')">fas fa-angle-left</v-icon>
+          <v-icon @click="switchWeek('prev')" class="controls">fas fa-angle-left</v-icon>
           <div class="current-period">
             <span>{{weekInfo.startMonth}}</span>
             <span 
@@ -28,9 +21,19 @@
               {{weekInfo.endYear}}
             </span>
           </div>
-          <v-icon @click="switchWeek('next')">fas fa-angle-right</v-icon>
+          <v-icon @click="switchWeek('next')" class="controls">fas fa-angle-right</v-icon>
         </div>
-
+        <v-tabs class="tabs">
+          <v-tab>
+            Неделя
+          </v-tab>
+          <v-tab>
+            По комнатам
+          </v-tab>
+          <v-tab>
+            Список
+          </v-tab>
+        </v-tabs>
       </div>
     </div>
     <events-grid :schedule="schedule" :dates="weekInfo.dates"></events-grid>
@@ -99,12 +102,32 @@ export default {
   padding: 12px 24px;
   .header {
     display: flex;
-    .current-period span {
-      text-transform: capitalize;
+    justify-content: space-between;
+    .c-heading {
+      display: flex;
+      align-items: center;
     }
-  }
-  .date-switcher {
-    display: flex;
+    .menu {
+      display: flex;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+      .date-switcher {
+        display: flex;
+        align-items: center;
+        margin-right: 20px;
+        .current-period {
+          font-size: 1.3em;
+          color: #337ab7;
+          padding: 0 10px;
+          span {
+            text-transform: capitalize;
+          }
+        }
+        .controls {
+          color: #337ab7;
+        }
+      }
+    }
   }
 }
 </style>
