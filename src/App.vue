@@ -4,7 +4,7 @@
       <v-expansion-panel expand>
         <v-expansion-panel-content>
           <div slot="header" class="c-heading">
-            <i class="fas fa-filter"></i> фильтры
+            <span class="icon"><i class="fas fa-filter"></i></span> фильтры
           </div>
           <v-container fluid grid-list-md class="filters-container">
             <v-layout wrap align-center>
@@ -143,6 +143,15 @@ export default {
     font-weight: bold;
     font-size: 1.2rem;
     text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    .icon {
+      font-size: 1.5rem;
+      display: inline-block;
+      width: 25px;
+      margin-right: 5px;
+      text-align: center;
+    }
   }
 }
 </style>

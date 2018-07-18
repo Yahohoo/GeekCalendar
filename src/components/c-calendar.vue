@@ -2,7 +2,9 @@
   <v-card class="calendar">
     <div class="header">
       <div class="c-heading">
-        <i class="fas fa-calendar-alt"></i> календарь
+        <span class="icon">
+          <i class="fas fa-calendar-alt icon"></i>
+        </span>календарь
       </div>
       <div class="menu">
         <div class="date-switcher">
@@ -103,29 +105,25 @@ export default {
   .header {
     display: flex;
     justify-content: space-between;
-    .c-heading {
+  }
+  .menu {
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    .date-switcher {
       display: flex;
       align-items: center;
-    }
-    .menu {
-      display: flex;
-      justify-content: flex-end;
-      flex-wrap: wrap;
-      .date-switcher {
-        display: flex;
-        align-items: center;
-        margin-right: 20px;
-        .current-period {
-          font-size: 1.3em;
-          color: #337ab7;
-          padding: 0 10px;
-          span {
-            text-transform: capitalize;
-          }
+      margin-right: 20px;
+      .current-period {
+        font-size: 1.3em;
+        color: #337ab7;
+        padding: 0 10px;
+        span {
+          text-transform: capitalize;
         }
-        .controls {
-          color: #337ab7;
-        }
+      }
+      .controls {
+        color: #337ab7;
       }
     }
   }
