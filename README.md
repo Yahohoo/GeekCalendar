@@ -6,7 +6,7 @@
 # устанавливаем если нет
 $ sudo apt-get node 
 $ sudo apt-get npm
-$ npm i -g vue-cli
+$ npm i -g @vue-cli
 $ npm i
 $ vue serve /src/main.js
 ```
