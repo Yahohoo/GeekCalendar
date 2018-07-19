@@ -106,8 +106,7 @@ export default {
     font-weight: bold;
     text-transform: capitalize;
     font-size: 1.1em;
-    word-break: break-all;
-    overflow-wrap: break-word;
+    // word-break: break-all; пока что не надо
     margin-bottom: 5px;
   }
   .props {
