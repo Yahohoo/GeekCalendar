@@ -2,18 +2,21 @@
 
 ## Запуск
 
+Для запуска потребуется Vue CLI
+
+[Инструкция по установке](https://cli.vuejs.org/guide/installation.html).
+После установки вы можете воспользоватся командами:
 ```bash
-# устанавливаем если нет
-$ sudo apt-get node 
-$ sudo apt-get npm
-$ npm i -g @vue-cli
-$ npm i
+# из корня папки
+# для запуска live-режима
 $ vue serve /src/main.js
+# для запуска сборки prod-ready файлов в папку dist
+$ vue build /src/main.js 
 ```
 
 ## Документация
 
-Текущие проблемы и задачи перечислены в todo, в issue нет смысла, проект локальный
+Текущие проблемы и задачи перечислены в todo
  
 WIP
 
