@@ -5,25 +5,87 @@ import moment from "moment"
 // предусмотреть краевые случаи!!
 // нужно ли это все вообще?
 
-
-function getValue(event, fields, process = null) {
-  var field = event;
-  for (let fieldName of fields) {
-    field = field[fieldName];
+const selectors = [{
+    label: "Возраст",
+    choicesFetcher: rangeFetch,
+    multi: true,
+    id: "age",
+    filterMethod: filterBetween,
+    fieldsName: [
+      ["baseLesson", "min_age"],
+      ["baseLesson", "max_age"]
+    ],
+    process: null
+  },
+  {
+    label: "Класс",
+    choicesFetcher: rangeFetch,
+    multi: true,
+    id: "class",
+    filterMethod: filterBetween,
+    fieldsName: [
+      ["baseLesson", "min_class"],
+      ["baseLesson", "max_class"]
+    ],
+    process: null
+  },
+  {
+    label: "Статус",
+    choicesFetcher: () => [],
+    multi: false,
+    id: "status",
+    filterMethod: filterEqual,
+    fieldsName: ["room", "name"],
+    process: null
+  },
+  {
+    label: "Направление",
+    choicesFetcher: singleFetch,
+    multi: false,
+    id: "dir",
+    filterMethod: filterEqual,
+    fieldsName: ["direction"],
+    process: null
+  },
+  {
+    label: "Педагог",
+    choicesFetcher: multiFetch,
+    multi: false,
+    id: "teacher",
+    filterMethod: filterIn,
+    fieldsName: ["teachersName"],
+    process: null
+  },
+  {
+    label: "Помещение",
+    choicesFetcher: singleFetch,
+    multi: false,
+    id: "room",
+    filterMethod: filterEqual,
+    fieldsName: ["room", "name"],
+    process: null
+  },
+  {
+    label: "День недели",
+    choicesFetcher: () => ["пн", "вт", "ср", "чт", "пт", "сб", "вс"],
+    multi: true,
+    id: "day",
+    filterMethod: filterEqual,
+    fieldsName: ["startDate"],
+    process(date) {
+      return moment(date).format('dd')
+    }
   }
-  if (process) {
-    field = process(field);
-  }
-  return field;
-}
+]
 
-function rangeFetch(events, fieldsName) {
+function rangeFetch(events) {
+  const fields = this.fieldsName
   var min, max, minLocal, maxLocal;
   min = Infinity;
   max = -1;
   for (let event of events) {
-    minLocal = getValue(event, fieldsName[0]);
-    maxLocal = getValue(event, fieldsName[1]);
+    minLocal = getValue(event, fields[0]);
+    maxLocal = getValue(event, fields[1]);
     if (minLocal !== null && minLocal < min) {
       min = minLocal;
     }
@@ -38,11 +100,12 @@ function rangeFetch(events, fieldsName) {
   return choices;
 }
 
-function singleFetch(events, fieldsName) {
+function singleFetch(events) {
+  const fields = this.fieldsName
   var choices = []
   var value
   for (let event of events) {
-    value = getValue(event, fieldsName)
+    value = getValue(event, fields)
     if (value !== null && !choices.includes(value)) {
       choices.push(value)
     }
@@ -50,11 +113,12 @@ function singleFetch(events, fieldsName) {
   return choices
 }
 
-function multiFetch(events, fieldsName) {
+function multiFetch(events) {
+  const fields = this.fieldsName
   var choices = []
   var values
   for (let event of events) {
-    values = getValue(event, fieldsName)
+    values = getValue(event, fields)
     for (let value of values) {
       if (value !== null && !choices.includes(value)) {
         choices.push(value)
@@ -64,73 +128,55 @@ function multiFetch(events, fieldsName) {
   return choices
 }
 
-const selectors = [{
-    label: "Возраст",
-    choicesFetcher: rangeFetch,
-    multi: true,
-    id: "age",
-    filterType: "filter-between",
-    fieldsName: [
-      ["baseLesson", "min_age"],
-      ["baseLesson", "max_age"]
-    ]
-  },
-  {
-    label: "Класс",
-    choicesFetcher: rangeFetch,
-    multi: true,
-    id: "class",
-    filterType: "filter-between",
-    fieldsName: [
-      ["baseLesson", "min_class"],
-      ["baseLesson", "max_class"]
-    ]
-  },
-  {
-    label: "Статус",
-    choicesFetcher: () => [],
-    multi: false,
-    id: "status",
-    filterType: "filter-equal",
-    fieldsName: ["room", "name"]
-  },
-  {
-    label: "Направление",
-    choicesFetcher: singleFetch,
-    multi: false,
-    id: "dir",
-    filterType: "filter-equal",
-    fieldsName: ["direction"]
-  },
-  {
-    label: "Педагог",
-    choicesFetcher: multiFetch,
-    multi: false,
-    id: "teacher",
-    filterType: "filter-in",
-    fieldsName: ["teachersName"]
-  },
-  {
-    label: "Помещение",
-    choicesFetcher: singleFetch,
-    multi: false,
-    id: "room",
-    filterType: "filter-equal",
-    fieldsName: ["room", "name"]
+function filterEqual(lesson, data) {
+  var field = getValue(
+    lesson,
+    this.fieldsName,
+    this.process
+  );
+  return data.some(el => field == el);
+}
 
-  },
-  {
-    label: "День недели",
-    choicesFetcher: () => ["пн", "вт", "ср", "чт", "пт", "сб", "вс"],
-    multi: true,
-    id: "day",
-    filterType: "filter-equal",
-    fieldsName: ["startDate"],
-    process: (date) => moment(date).format('dd')
+function filterIn(lesson, data) {
+  const field = getValue(
+    lesson,
+    this.fieldsName,
+    this.process
+  );
+  return data.some(el => field.includes(el));
+}
+
+function filterBetween(lesson, data) {
+  const min = getValue(
+    lesson,
+    this.fieldsName[0],
+    this.process
+  );
+
+  if (min === null) {
+    return false;
   }
-]
+
+  const max = getValue(
+    lesson,
+    this.fieldsName[1],
+    this.process
+  );
+
+  return data.some(el => min <= el && el <= max);
+}
+
+function getValue(event, fieldsName, process) {
+  var field = event;
+  for (let fieldName of fieldsName) {
+    field = field[fieldName];
+  }
+  if (process) {
+    field = process(field);
+  }
+  return field;
+}
 
 export {
-  selectors,
-  getValue
+  selectors
 };

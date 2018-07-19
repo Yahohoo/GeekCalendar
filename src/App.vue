@@ -11,7 +11,7 @@
               <c-selector
               v-for="selector in selectors"
               :key="selector.id"
-              :prs="selector"
+              :selector="selector"
               :choices="selectorsChoices[selector.id]"/>
             </v-layout>
           </v-container>
@@ -27,28 +27,7 @@ import cSelector from "./components/c-selector";
 import cCalendar from "./components/c-calendar";
 import schedule from "./data.js";
 import Vue from "vue";
-import { selectors, getValue } from "./selectors.js";
-
-function filterEqual(lesson, prs) {
-  var field = getValue(lesson, prs.fields, prs.process);
-  return prs.data.some(el => field == el);
-}
-
-function filterIn(lesson, prs) {
-  const field = getValue(lesson, prs.fields);
-  return prs.data.some(el => field.includes(el));
-}
-
-function filterBetween(lesson, prs) {
-  const min = getValue(lesson, prs.fields[0]);
-
-  if (min === null) {
-    return false;
-  }
-
-  const max = getValue(lesson, prs.fields[1]);
-  return prs.data.some(el => min <= el && el <= max);
-}
+import { selectors } from "./selectors.js";
 
 export default {
   name: "App",
@@ -84,9 +63,7 @@ export default {
     }
   },
   methods: {
-    checkSchedule(event, data) {
-      var filFunc;
-
+    checkSchedule(selector, data) {
       if (!Array.isArray(data)) {
         if (data === null) {
           data = [];
@@ -94,29 +71,10 @@ export default {
           data = [data];
         }
       }
-
-      switch (event.filterType) {
-        case "filter-equal":
-          filFunc = filterEqual;
-          break;
-        case "filter-between":
-          filFunc = filterBetween;
-          break;
-        case "filter-in":
-          filFunc = filterIn;
-          break;
-      }
-
       for (var lesson of this.schedule) {
         const doFit =
-          data.length == 0
-            ? true
-            : filFunc(lesson, {
-                process: event.process,
-                fields: event.fieldsName,
-                data
-              });
-        Vue.set(lesson._filters, event.id, doFit);
+          data.length == 0 ? true : selector.filterMethod(lesson, data);
+        Vue.set(lesson._filters, selector.id, doFit);
       }
     }
   },
