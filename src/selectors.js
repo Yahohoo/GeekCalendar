@@ -1,77 +1,118 @@
 import moment from "moment"
 
-// Данные для фильтра включают тип ивента для обновления фильтра
-// fetcher - метод сбора данных, в считающем свойстве будет выполняться метод и присваиваться? нет, его буду брать отдельно по id из объекта свойства, которое будет перебирать, можно переписать emit и все остальное, чтобы созранить плоскость
-// предусмотреть краевые случаи!!
-// нужно ли это все вообще?
+/* 
+Каждый селектор - объект, который содержит все данные и логику, относящиеся к нему.
+Логику предполагается формировать с помощью методов фильтрации данных и методов выборки.
+Метод фильтрации применяется при взаимодействии пользователся с select. При изменении состояния селектора
+(выбор пунктов, выбор поля, очистка поля) из компонента
+ c-selector поднимается событие, которое содержит объект selector
+
+Назначение полей на примере селектора "День недели":
+  {
+    // Название селектра, будет отображено пользователю
+    label: "День недели",
+
+    // Несколько вариантов выбора, галочками
+    multi: true,
+
+    // Идентификатор, используется при выборке вариантов
+    // с choicesFetcher
+    id: "day",
+
+    // По этому полю идет доступ к данным в getValue
+    // В массиве по порядку перечисляются поля
+    // на пути к значению начиная от корня
+    fieldsName: ["startDate"],
+
+    // Метод для выборки вариантов ответа для пользователя
+    // нужен, если варианты зависят от данных,
+    // например, имена преподавателей
+    choicesFetcher: () => [
+      "пн", "вт", "ср", "чт", "пт", "сб", "вс"
+    ],
+
+    // Метод, с помощью которого определяется,
+    // проходит ли какой-либо 
+    // объект данных при текущих значениях селектора
+    filterMethod: filterEqual,
+    
+    // метод используется, если для сырого значения,
+    // полученного из поля нужна доп. обработка
+    // для того, чтобы использовать их в методе filterMethod
+    process(date) {
+      return moment(date).format('dd')
+    }
+*/
 
 const selectors = [{
     label: "Возраст",
-    choicesFetcher: rangeFetch,
     multi: true,
     id: "age",
-    filterMethod: filterBetween,
     fieldsName: [
       ["baseLesson", "min_age"],
       ["baseLesson", "max_age"]
     ],
+    choicesFetcher: rangeFetch,
+    filterMethod: filterBetween,
     process: null
   },
   {
     label: "Класс",
-    choicesFetcher: rangeFetch,
     multi: true,
     id: "class",
-    filterMethod: filterBetween,
     fieldsName: [
       ["baseLesson", "min_class"],
       ["baseLesson", "max_class"]
     ],
+    choicesFetcher: rangeFetch,
+    filterMethod: filterBetween,
     process: null
   },
   {
     label: "Статус",
-    choicesFetcher: () => [],
     multi: false,
     id: "status",
-    filterMethod: filterEqual,
     fieldsName: ["room", "name"],
+    choicesFetcher: () => [],
+    filterMethod: filterEqual,
     process: null
   },
   {
     label: "Направление",
-    choicesFetcher: singleFetch,
     multi: false,
     id: "dir",
-    filterMethod: filterEqual,
+    choicesFetcher: singleFetch,
     fieldsName: ["direction"],
+    filterMethod: filterEqual,
     process: null
   },
   {
     label: "Педагог",
-    choicesFetcher: multiFetch,
     multi: false,
     id: "teacher",
-    filterMethod: filterIn,
     fieldsName: ["teachersName"],
+    choicesFetcher: multiFetch,
+    filterMethod: filterIn,
     process: null
   },
   {
     label: "Помещение",
-    choicesFetcher: singleFetch,
     multi: false,
     id: "room",
-    filterMethod: filterEqual,
     fieldsName: ["room", "name"],
+    choicesFetcher: singleFetch,
+    filterMethod: filterEqual,
     process: null
   },
   {
     label: "День недели",
-    choicesFetcher: () => ["пн", "вт", "ср", "чт", "пт", "сб", "вс"],
     multi: true,
     id: "day",
-    filterMethod: filterEqual,
     fieldsName: ["startDate"],
+    choicesFetcher: () => [
+      "пн", "вт", "ср", "чт", "пт", "сб", "вс"
+    ],
+    filterMethod: filterEqual,
     process(date) {
       return moment(date).format('dd')
     }
