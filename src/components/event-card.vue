@@ -24,12 +24,11 @@
           </div>
         </div>
       </div>
-      <div class="prop">
+      <div class="prop" v-if="age">
         <span class="icon"><i class="fas fa-child"></i></span>{{age}}
       </div>
     </div>
     <div class="buttons">
-      <v-btn flat small>Запись</v-btn>
     </div>
   </div>
 </template>
@@ -51,6 +50,10 @@ export default {
     age() {
       var min, max, type;
       const bl = this.event.baseLesson;
+
+      if (!bl.min_class && !bl.min_age) {
+        return null
+      }
       if (bl.min_class) {
         min = bl.min_class;
         max = bl.max_class;
