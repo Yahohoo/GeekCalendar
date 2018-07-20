@@ -22,7 +22,7 @@ import moment from "moment"
     // По этому полю идет доступ к данным в getValue
     // В массиве по порядку перечисляются поля
     // на пути к значению начиная от корня
-    fieldsName: ["startDate"],
+    fieldsNames: ["startDate"],
 
     // Метод для выборки вариантов ответа для пользователя
     // нужен, если варианты зависят от данных,
@@ -44,11 +44,13 @@ import moment from "moment"
     }
 */
 
-const selectors = [{
+var selectors = []
+
+const selectorsConfig = [{
     label: "Возраст",
     multi: true,
     id: "age",
-    fieldsName: [
+    fieldsNames: [
       ["baseLesson", "min_age"],
       ["baseLesson", "max_age"]
     ],
@@ -60,19 +62,19 @@ const selectors = [{
     label: "Класс",
     multi: true,
     id: "class",
-    fieldsName: [
+    fieldsNames: [
       ["baseLesson", "min_class"],
       ["baseLesson", "max_class"]
     ],
     choicesFetcher: rangeFetch,
     filterMethod: filterBetween,
-    process: null
+    process: (klass) => klass < 1 ? null : klass
   },
   {
     label: "Статус",
     multi: false,
     id: "status",
-    fieldsName: ["room", "name"],
+    fieldsNames: ["room", "name"],
     choicesFetcher: () => [],
     filterMethod: filterEqual,
     process: null
@@ -82,7 +84,7 @@ const selectors = [{
     multi: false,
     id: "dir",
     choicesFetcher: singleFetch,
-    fieldsName: ["direction"],
+    fieldsNames: ["direction"],
     filterMethod: filterEqual,
     process: null
   },
@@ -90,7 +92,7 @@ const selectors = [{
     label: "Педагог",
     multi: false,
     id: "teacher",
-    fieldsName: ["teachersName"],
+    fieldsNames: ["teachersName"],
     choicesFetcher: multiFetch,
     filterMethod: filterIn,
     process: null
@@ -99,7 +101,7 @@ const selectors = [{
     label: "Помещение",
     multi: false,
     id: "room",
-    fieldsName: ["room", "name"],
+    fieldsNames: ["room", "name"],
     choicesFetcher: singleFetch,
     filterMethod: filterEqual,
     process: null
@@ -108,45 +110,76 @@ const selectors = [{
     label: "День недели",
     multi: true,
     id: "day",
-    fieldsName: ["startDate"],
+    fieldsNames: ["startDate"],
     choicesFetcher: () => [
       "пн", "вт", "ср", "чт", "пт", "сб", "вс"
     ],
     filterMethod: filterEqual,
-    process(date) {
-      return moment(date).format('dd')
-    }
+    process: (date) => moment(date).format('dd')
   }
 ]
 
+class Selector {
+
+  constructor(prs) {
+    for (let field in prs) {
+      this[field] = prs[field]
+    }
+  }
+
+  getValue(event, fieldsNames) {
+    var field = event;
+
+    for (let fieldName of fieldsNames) {
+      field = field[fieldName];
+    }
+
+    if (this.process) {
+      field = this.process(field);
+    }
+
+    return field;
+  }
+}
+
+for (const config of selectorsConfig) {
+  selectors.push(new Selector(config))
+}
+
 function rangeFetch(events) {
-  const fields = this.fieldsName
-  var min, max, minLocal, maxLocal;
-  min = Infinity;
-  max = -1;
+  const fields = this.fieldsNames
+  var minLocal, maxLocal, min = Infinity,
+    max = -1;
+  var choices = [];
+
   for (let event of events) {
-    minLocal = getValue(event, fields[0]);
-    maxLocal = getValue(event, fields[1]);
-    if (minLocal !== null && minLocal < min) {
+    minLocal = this.getValue(event, fields[0]);
+    maxLocal = this.getValue(event, fields[1]);
+
+    if (minLocal != null && minLocal < min) {
       min = minLocal;
     }
-    if (maxLocal !== null && maxLocal > max) {
+
+    if (maxLocal != null && maxLocal > max) {
       max = maxLocal;
     }
   }
-  var choices = [];
+
   for (let i = min; i <= max; i++) {
     choices.push(i);
   }
+
   return choices;
 }
 
 function singleFetch(events) {
-  const fields = this.fieldsName
+  const fields = this.fieldsNames
   var choices = []
   var value
+
   for (let event of events) {
-    value = getValue(event, fields)
+    value = this.getValue(event, fields)
+
     if (value !== null && !choices.includes(value)) {
       choices.push(value)
     }
@@ -155,11 +188,13 @@ function singleFetch(events) {
 }
 
 function multiFetch(events) {
-  const fields = this.fieldsName
+  const fields = this.fieldsNames
   var choices = []
   var values
+
   for (let event of events) {
-    values = getValue(event, fields)
+    values = this.getValue(event, fields)
+
     for (let value of values) {
       if (value !== null && !choices.includes(value)) {
         choices.push(value)
@@ -170,53 +205,41 @@ function multiFetch(events) {
 }
 
 function filterEqual(lesson, data) {
-  var field = getValue(
+  var field = this.getValue(
     lesson,
-    this.fieldsName,
-    this.process
+    this.fieldsNames
   );
+
   return data.some(el => field == el);
 }
 
 function filterIn(lesson, data) {
-  const field = getValue(
+  const field = this.getValue(
     lesson,
-    this.fieldsName,
-    this.process
+    this.fieldsNames
   );
+
   return data.some(el => field.includes(el));
 }
 
 function filterBetween(lesson, data) {
-  const min = getValue(
+  const min = this.getValue(
     lesson,
-    this.fieldsName[0],
-    this.process
+    this.fieldsNames[0]
   );
 
   if (min === null) {
     return false;
   }
 
-  const max = getValue(
+  const max = this.getValue(
     lesson,
-    this.fieldsName[1],
-    this.process
+    this.fieldsNames[1]
   );
 
   return data.some(el => min <= el && el <= max);
 }
 
-function getValue(event, fieldsName, process) {
-  var field = event;
-  for (let fieldName of fieldsName) {
-    field = field[fieldName];
-  }
-  if (process) {
-    field = process(field);
-  }
-  return field;
-}
 
 export {
   selectors

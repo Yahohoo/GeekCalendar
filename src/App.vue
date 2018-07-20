@@ -43,7 +43,6 @@ export default {
     };
   },
   computed: {
-    // второй проход, но реактивность
     filteredSchedule() {
       var filtered = this.schedule.filter(lesson => {
         return Object.values(lesson._filters).every(el => el);
@@ -55,7 +54,7 @@ export default {
       var id, fields, choices;
       for (let selector of this.selectors) {
         id = selector.id;
-        fields = selector.fieldsName;
+        fields = selector.fieldsNames;
         choices = selector.choicesFetcher(this.schedule, fields);
         selectorsChoices[id] = choices;
       }
@@ -80,6 +79,13 @@ export default {
   },
   created() {
     this.$root.$on("filter-change", this.checkSchedule);
+
+    /* к каждому объекту занятия добавляется служебное поле с объектом
+        в нем хранятся поля вида selector_id: do_fit(true/false)
+        таким образом для фильтрации достаточно выбрать такие занятия,
+        у которых у которых все значения do_fit равны true
+        Vue.set необходим для обеспечения реактивности */
+
     for (var lesson of this.schedule) {
       Vue.set(lesson, "_filters", {});
     }
@@ -94,6 +100,7 @@ export default {
   font-family: "Open Sans", sans-serif;
   color: #212121;
   width: 95%;
+  max-width: 1200px;
   margin: 10px auto;
 
   .c-heading {
